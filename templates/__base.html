@@ -1,0 +1,139 @@
+<html>
+{% load staticfiles humanize %}
+<head>
+    <title>{% block head_title %}Workshop Information System - WIS{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+
+    <style>
+        .nav-item .active {
+            background-color: #ec971f !important;
+            border-radius: 0 !important;
+        }
+
+        .sidebar-top-bg-image {
+            background: url("{% static 'images/diy_workshop.jpg' %}");
+            background-size: cover;
+            height: 185px;
+        }
+
+        .sidebar-img-layer {
+            background-color: rgba(200, 200, 200, 0.8);
+            width: 100%;
+            height: 100%;
+        }
+
+        .transparent-input {
+            background-color: rgba(0, 0, 0, 0) !important;
+            border: none !important;
+            color: #ec971f !important;
+        }
+
+        .transparent-input::placeholder {
+            color: #ec971f !important;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .bb-danger {
+            border-bottom: 3px solid #CC0000;
+        }
+
+        .bb-warning {
+            border-bottom: 3px solid #FF8800;
+        }
+
+        .bb-success {
+            border-bottom: 3px solid #007E33;
+        }
+
+        .bb-info {
+            border-bottom: 3px solid #0099CC;
+        }
+    </style>
+
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    <script>
+        $(function () {
+            $('body').on('click', '[data-toggle="modal"]', function () {
+                $($(this).data("target") + ' .modal-content').load($(this).attr("href"));
+            });
+        });
+    </script>
+    {% block header_static %} {% endblock %}
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-4 col-md-3 hidden-xs-down px-0 bg-inverse h-100">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item sidebar-top-bg-image">
+                    <div class="sidebar-img-layer">
+                        <div class="text-center">
+                            <img src="{% static 'images/user_avatar.png' %}" alt=""
+                                 class="rounded-circle mx-auto d-block pt-3"
+                                 style="height: 100px;">
+                            <p class="mb-0">{{ request.user.email }}</p>
+                            <small class="">&bull; Last Login : {{ request.user.last_login|naturaltime }}</small>
+                            <br>
+                            <a href="{% url 'change_password' %}" class="btn btn-outline-primary btn-sm rounded-0">Change
+                                Password</a>
+                            <a href="{% url 'account_logout' %}"
+                               class="btn btn-outline-primary btn-sm rounded-0">Logout</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% block sidebar_dashboard %}{% endblock %}"
+                       href="{% url 'dashboard' %}">Overview
+                        <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% block sidebar_job %}{% endblock %}" href="#">Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% block sidebar_customer %}{% endblock %}" href="#">Customers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% block sidebar_inventory %}{% endblock %}"
+                       href="{% url 'inventory:inventory_overview' %}">Inventories</a>
+                </li>
+            </ul>
+        </nav>
+        <main class="col-sm-8 col-md-9 px-0">
+            <nav class="navbar navbar-inverse bg-inverse">
+                <form action="" class="mb-0">
+                    <input type="text" class="form-control px-1 transparent-input" placeholder="Type to Search ..."
+                           width="100%">
+                </form>
+            </nav>
+            <div class="p-3">
+
+                {% block maincontainer %} {% endblock %}
+
+                <div class="modal" id="generic-modal-box" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content rounded-0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal" id="generic-modal-large-box" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content rounded-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends '__base.html' %}
+
+{% load bootstrap4 staticfiles %}
+
+
+{% block sidebar_inventory %}active{% endblock %}
+
+{% block head_title %}Add items to inventory - WIS{% endblock %}
+
+{% block maincontainer %}
+    <ol class="breadcrumb rounded-0">
+        <li class="breadcrumb-item"><a href="{% url 'inventory:inventory_overview' %}">Inventory</a></li>
+        <li class="breadcrumb-item active">
+            {% if object %}
+                Edit Item
+            {% else %}
+                Add Item
+            {% endif %}
+        </li>
+    </ol>
+    <div class="row">
+        <div class="col-7">
+            <form action="" method="POST">{% csrf_token %}
+                <div class="card rounded-0">
+                    <div class="card-block">
+                        {% bootstrap_form form %}
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary rounded-0" type="submit" name="save">Save items</button>
+                        <button class="btn btn-info rounded-0" type="submit" name="add_another">Save and Add Another
+                            Item
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block header_static %}
+    <link href="{% static 'selectize/css/selectize.bootstrap3.css' %}" rel="stylesheet"/>
+    <link href="{% static 'selectize/css/selectize.css' %}" rel="stylesheet">
+    <script src="{% static 'selectize/js/standalone.selectize.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $("select[data-add-new='true']").selectize({
+                valueField: 'id',
+                labelField: 'name',
+                searchField: 'name',
+                create: function (input) {
+                    console.log(input);
+                    return {'id': '_' + input, 'name': input};
+                }
+            });
+        })
+    </script>
+{% endblock %}
