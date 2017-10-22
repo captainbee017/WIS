@@ -62,3 +62,37 @@ class OutofStockItems(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return super().get_queryset().exclude(stock__gt=0)
+
+
+class ItemCategoryListView(LoginRequiredMixin, ListView):
+    model = ItemCategory
+    template_name = 'category_list.html'
+
+
+class ItemCategoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = ItemCategory
+    template_name = 'category_form.html'
+    fields = ('name', )
+    success_url = reverse_lazy('inventory:category_list')
+
+
+class ItemCategoryDeleteView(LoginRequiredMixin, DeleteView):
+    model = ItemCategory
+    template_name = 'category_delete.html'
+    success_url = reverse_lazy('inventory:category_list')
+
+
+class ItemListView(LoginRequiredMixin, ListView):
+    model = Item
+    template_name = 'item_list.html'
+
+    def get_queryset(self, **kwargs):
+        cat_id = self.kwargs.get('cat_id', None)
+        filter_kwargs = {'category_id': cat_id} if cat_id else {}
+        return super().get_queryset(**kwargs).filter(**filter_kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        if self.kwargs.get('cat_id', None):
+            ctx['category'] = ItemCategory.objects.get(id=self.kwargs['cat_id'])
+        return ctx

@@ -7,9 +7,17 @@
 {% block maincontainer %}
     <div class="row">
         <div class="col-3">
+            <div class="card rounded-0 bb-warning">
+                <div class="card-block text-center">
+                    <h1><a href="{% url 'inventory:category_list' %}">{{ category_list.count }}</a></h1>
+                    <h5>Total Categories</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
             <div class="card rounded-0 bb-info">
                 <div class="card-block text-center">
-                    <h1>{{ object_list.count }}</h1>
+                    <h1><a href="{% url 'inventory:item_list' %}">{{ object_list.count }}</a></h1>
                     <h5>Total Items</h5>
                 </div>
             </div>
@@ -22,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-3">
             <div class="card rounded-0 bb-success">
                 <div class="card-block text-center">
                     <h1>XXX</h1>
@@ -32,7 +40,7 @@
         </div>
     </div>
     <div class="row pt-3">
-        <div class="col-6">
+        {% comment %}<div class="col-12">
             <div class="card rounded-0">
                 <div class="card-header">
                     <h5 class="d-inline">Categories</h5>
@@ -65,30 +73,45 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>{% endcomment %}
 
-        <div class="col-6">
+        <div class="col-12">
             <div class="card rounded-0">
                 <div class="card-header">
-                    <h5 class="d-inline">Items</h5>
+                    <h5 class="d-inline">Recently Added Items</h5>
                     {% if object_list.count > 6 %}
                         <a href="" class="btn btn-sm btn-secondary float-right rounded-0">View All</a>
-                        <small class="text-muted">Showing 6 of {{ object_list.count }} items</small>
                     {% endif %}
                 </div>
                 <div class="card-block">
                     <table class="table">
                         <thead>
                         <th>Item Code</th>
-                        <th>Name</th>
+                        <th>Item</th>
                         <th>Stock</th>
+                        <th>Price</th>
+                        <th></th>
                         </thead>
                         <tbody>
                         {% for object in object_list %}
                             <tr>
-                            <td>{{ object.product_id }}</td>
-                            <td>{{ object.name }}</td>
-                            <td>{{ object.stock }}</td>
+                                <td>{{ object.product_id }}</td>
+                                <td>
+                                    {{ object.name }}
+                                    {% if object.company %}
+                                    <br>
+                                    <small class="text-muted">by {{ object.company }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ object.stock }}</td>
+                                <td>{{ object.price }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'inventory:inventory_edit' object.id %}"
+                                       class="btn btn-sm rounded-0 btn-info">Edit</a>
+                                    <a href="{% url 'inventory:inventory_delete' object.id %}"
+                                       class="btn btn-sm rounded-0 btn-danger" data-toggle="modal"
+                                       data-target="#generic-modal-box">Delete</a>
+                                </td>
                             </tr>
                         {% endfor %}
 
@@ -107,26 +130,7 @@
 
                         {#                        <div class="col-4" style="border-right: 1px solid #ECEDEF">#}
                         <h4>Item Categories</h4>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>No.of items</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            {% for category in category_list %}
-                                <tr>
-                                    <td>{{ category.name }}</td>
-                                    <td></td>
-                                    <td class="">
-                                        <a href="" class="btn btn-sm btn-danger float-right rounded-0">Delete</a>
-                                        <a href=""
-                                           class="btn btn-sm btn-secondary float-right rounded-0 mr-2">Edit</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+
                     </div>
                     <div class="col-8">
                             <h4>Items > All</h4>
